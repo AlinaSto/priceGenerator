@@ -17,7 +17,7 @@ public class Product {
     @Column
     private ProductType productType;
     @Column
-    private Integer productPrice;
+    private Double productPrice;
     @Column
     private String name;
     @Column
@@ -33,13 +33,17 @@ public class Product {
     @JsonManagedReference(value = "product-discount")
     private List<Discount> discountList;
 
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
+    @JsonManagedReference(value = "product-cartItem")
+    private List<CartItem> cartItems;
     public Product() {
     }
 
-    public Product(ProductType productType, Integer productAgeDiscountThreshold, Long id, List<Quotation> quotationList, List<Discount> discountList, Integer productPrice, Integer productQuantity) {
+    public Product(ProductType productType, List<CartItem> cartItems,Integer productAgeDiscountThreshold, Long id, List<Quotation> quotationList, List<Discount> discountList, Double productPrice, Integer productQuantity) {
         this.productType = productType;
         this.id = id;
         this.quotationList = quotationList;
+        this.cartItems = cartItems;
         this.discountList = discountList;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
@@ -92,11 +96,11 @@ public class Product {
         this.name = name;
     }
 
-    public Integer getProductPrice() {
+    public Double getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
     }
 
@@ -114,5 +118,13 @@ public class Product {
 
     public void setProductAgeDiscountThreshold(Integer productAgeDiscountThreshold) {
         this.productAgeDiscountThreshold = productAgeDiscountThreshold;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

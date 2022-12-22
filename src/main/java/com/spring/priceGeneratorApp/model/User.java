@@ -48,10 +48,13 @@ public class User {
     @JsonManagedReference(value = "user-quotation")
     private List<Quotation> quotationList;
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+    @JsonManagedReference(value = "user-cartItem")
+    private List<CartItem> cartItems;
     public User() {
     }
 
-    public User(Long id, LocalDate dateOfBirth, String username, String password, String email, String country, List<Role> roleList, List<Order> orderList, List<Quotation> quotationList) {
+    public User(Long id, LocalDate dateOfBirth, String username, String password, String email, String country, List<Role> roleList, List<Order> orderList, List<Quotation> quotationList, List<CartItem> cartItems) {
         this.id = id;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
@@ -61,6 +64,7 @@ public class User {
         this.roleList = roleList;
         this.orderList = orderList;
         this.quotationList = quotationList;
+        this.cartItems = cartItems;
     }
 
     public Long getId() {
@@ -139,5 +143,13 @@ public class User {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

@@ -59,10 +59,10 @@ public class ProductService {
             discount.setProduct(productToBeAdd);
             productToBeAdd.getDiscountList().add(discount);
             discount.setCountry(foundCountry);
-
         }
     }
-//    private void generateQuotationToProduct(AddProductDTO addProductDTO, Product productToBeAdd) {
+
+    //    private void generateQuotationToProduct(AddProductDTO addProductDTO, Product productToBeAdd) {
 //        for (QuotationDTO quotationDTO : addProductDTO.getQuotationList()) {
 //            Optional<User> foundUser = userRepository.findUserByUsername(quotationDTO.getUser());
 //            if (foundUser == null) {
@@ -75,6 +75,12 @@ public class ProductService {
 //            quotation.setExpireDate(quotation.getExpireDate());
 //        }
 //    }
+    public Product updateProductQuantity(AddProductDTO addProductDTO, Long productId) {
+        Product foundProductToBeUpdated = productRepository.findProductById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "the order you want to update was not found "));
+        foundProductToBeUpdated.setProductQuantity(addProductDTO.getProductQuantity());
+        return productRepository.save(foundProductToBeUpdated);
+
+    }
 
     public void deleteProduct(Long productId) {
         //  Product foundProduct = productRepository.findProductByName(addProductDTO.getProductName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found"));

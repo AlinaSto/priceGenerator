@@ -13,6 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuotationService {
@@ -22,14 +25,16 @@ public class QuotationService {
     private UserRepository userRepository;
     private CountryRepository countryRepository;
     private DiscountRepository discountRepository;
+    private UserService userService;
 
     @Autowired
-    public QuotationService(QuotationRepository quotationRepository, ProductRepository productRepository, UserRepository userRepository, DiscountRepository discountRepository, CountryRepository countryRepository) {
+    public QuotationService(QuotationRepository quotationRepository, ProductRepository productRepository, UserRepository userRepository, DiscountRepository discountRepository, CountryRepository countryRepository, UserService userService) {
         this.quotationRepository = quotationRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.discountRepository = discountRepository;
         this.countryRepository = countryRepository;
+        this.userService = userService;
     }
 
     public Quotation generateQuotation(Long productId) {
@@ -40,9 +45,8 @@ public class QuotationService {
         //4. verificam daca varsta userului se incadreaza pt reducere in functie de prag
         //4.1 calculam reducerea de varsta
         //4.2 asignam valoarea reducerii de varsta unei noi cotatii
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User foundUser = userRepository.findUserByUsername(userDetails.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
-        Integer foundUserAge = Period.between(foundUser.getDateOfBirth(), LocalDate.now()).getYears();
+        User foundUser = userService.findLoggedInUser();
+        Integer foundUserAge = Period.between(userService.findLoggedInUser().getDateOfBirth(), LocalDate.now()).getYears();
         Quotation quotation = new Quotation();
         if (foundUserAge >= foundProduct.getProductAgeDiscountThreshold()) {
             quotation.setAgeDiscount(foundProduct.getProductPrice() * 0.2);
@@ -54,7 +58,7 @@ public class QuotationService {
         //4. o asignez cotatiei
         String foundUserCountry = foundUser.getCountry();
         Discount countryDiscount = discountRepository.findDiscountByCountry_CountryNameAndProduct(foundUserCountry, foundProduct);
-        quotation.setCountryDiscount(foundProduct.getProductPrice() * countryDiscount.getDiscount()/100);
+        quotation.setCountryDiscount(foundProduct.getProductPrice() * countryDiscount.getDiscount() / 100);
 
         quotation.setProduct(foundProduct);
         quotation.setUser(foundUser);
@@ -62,5 +66,28 @@ public class QuotationService {
         return quotationRepository.save(quotation);
 
     }
+
+    public List<Quotation> getActiveQuotation() {
+//        List<Quotation> availableQuotations = new ArrayList<>();
+//        for (Quotation quotation : foundUser.getQuotationList()) {
+//            if (quotation.getExpireDate().isAfter(LocalDateTime.now())) {
+//                availableQuotations.add(quotation);
+//            }
+//        }
+//        return availableQuotations;
+        return userService.findLoggedInUser().getQuotationList().stream()
+                .filter(quotation -> quotation.getExpireDate().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
+
+//    public void deleteQuotationWhenDateExpire() {
+//        List<Quotation> quotationList = quotationRepository.findAll();
+//        for (Quotation quotation : quotationList) {
+//            if (quotation.getExpireDate().isBefore(LocalDateTime.now())) {
+//                quotationRepository.delete(quotation);
+//            }
+//
+//        }
+//    }
 
 }

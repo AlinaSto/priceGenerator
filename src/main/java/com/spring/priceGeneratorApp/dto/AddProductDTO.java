@@ -10,12 +10,12 @@ public class AddProductDTO {
 
     private String productName;
     private ProductType productType;
-    private Integer productPrice;
+    private Double productPrice;
     private Integer productQuantity;
     private List<DiscountDTO> discounts;
 
 
-    public AddProductDTO(String productName, ProductType productType, Integer productPrice, Integer productQuantity, List<DiscountDTO> discounts) {
+    public AddProductDTO(String productName, ProductType productType, Double productPrice, Integer productQuantity, List<DiscountDTO> discounts) {
         this.productName = productName;
         this.productType = productType;
         this.productPrice = productPrice;
@@ -40,11 +40,11 @@ public class AddProductDTO {
         this.productType = productType;
     }
 
-    public Integer getProductPrice() {
+    public Double getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
     }
 
