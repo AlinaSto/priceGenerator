@@ -4,16 +4,12 @@ import com.spring.priceGeneratorApp.model.*;
 import com.spring.priceGeneratorApp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +47,6 @@ public class QuotationService {
         if (foundUserAge >= foundProduct.getProductAgeDiscountThreshold()) {
             quotation.setAgeDiscount(foundProduct.getProductPrice() * 0.2);
         }
-
         //1. luam tara clientului
         //2. luam procentul de discount de la tara clientului
         //3. calculez reducere de tara
@@ -62,7 +57,7 @@ public class QuotationService {
 
         quotation.setProduct(foundProduct);
         quotation.setUser(foundUser);
-        quotation.setExpireDate(LocalDateTime.now().plusMinutes(5));
+        quotation.setExpireDate(LocalDateTime.now().plusMinutes(59));
         return quotationRepository.save(quotation);
 
     }

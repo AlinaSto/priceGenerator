@@ -36,18 +36,23 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
     @JsonManagedReference(value = "product-cartItem")
     private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonManagedReference(value = "product-orderItem")
+    private List<OrderItem> orderItemList;
     public Product() {
     }
 
-    public Product(ProductType productType, List<CartItem> cartItems,Integer productAgeDiscountThreshold, Long id, List<Quotation> quotationList, List<Discount> discountList, Double productPrice, Integer productQuantity) {
-        this.productType = productType;
+    public Product(Long id, ProductType productType, Double productPrice, String name, Integer productQuantity, Integer productAgeDiscountThreshold, List<Quotation> quotationList, List<Discount> discountList, List<CartItem> cartItems, List<OrderItem> orderItemList) {
         this.id = id;
-        this.quotationList = quotationList;
-        this.cartItems = cartItems;
-        this.discountList = discountList;
+        this.productType = productType;
         this.productPrice = productPrice;
+        this.name = name;
         this.productQuantity = productQuantity;
-        this.productAgeDiscountThreshold=productAgeDiscountThreshold;
+        this.productAgeDiscountThreshold = productAgeDiscountThreshold;
+        this.quotationList = quotationList;
+        this.discountList = discountList;
+        this.cartItems = cartItems;
+        this.orderItemList = orderItemList;
     }
 
     public Long getId() {
@@ -118,6 +123,14 @@ public class Product {
 
     public void setProductAgeDiscountThreshold(Integer productAgeDiscountThreshold) {
         this.productAgeDiscountThreshold = productAgeDiscountThreshold;
+    }
+
+    public List<OrderItem> getOrderItemList() {
+        return orderItemList;
+    }
+
+    public void setOrderItemList(List<OrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
     }
 
     public List<CartItem> getCartItems() {

@@ -7,6 +7,7 @@ import com.spring.priceGeneratorApp.model.Product;
 import com.spring.priceGeneratorApp.model.User;
 import com.spring.priceGeneratorApp.repository.CartItemRepository;
 import com.spring.priceGeneratorApp.repository.ProductRepository;
+import com.spring.priceGeneratorApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,16 @@ public class CartItemService {
     private CartItemRepository cartItemRepository;
     private UserService userService;
     private ProductRepository productRepository;
-
-    @Autowired
-
-    public CartItemService(CartItemRepository cartItemRepository, UserService userService, ProductRepository productRepository) {
+    private UserRepository userRepository;
+@Autowired
+    public CartItemService(CartItemRepository cartItemRepository, UserService userService, ProductRepository productRepository, UserRepository userRepository) {
         this.cartItemRepository = cartItemRepository;
         this.userService = userService;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
+
+
 
     public CartItem addCartItems(AddToCartDTO addToCartDTO) {
         User foundUser = userService.findLoggedInUser();
@@ -95,5 +98,9 @@ public class CartItemService {
 
 
         return totalPrice.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "total price could not be calculated"));
+    }
+    public void deleteAllUserCartItems(Long userId) {
+        User foundUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
+        cartItemRepository.deleteByUser(foundUser);
     }
 }

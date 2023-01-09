@@ -16,9 +16,11 @@ public class Country {
             initialValue = 1,
             allocationSize = 1)
     private Long id;
-
+    @Column
     private String countryName;
 
+    @Column
+    private Double countryDiscount;
     @OneToMany(mappedBy = "country", cascade = {CascadeType.ALL})
     @JsonManagedReference(value = "country-discount")
     private List<Discount> discountList;
@@ -26,10 +28,11 @@ public class Country {
     public Country() {
     }
 
-    public Country(Long id, String countryName, List<Discount> discountList) {
+    public Country(Long id, String countryName, List<Discount> discountList, Double countryDiscount) {
         this.id = id;
         this.countryName = countryName;
         this.discountList = discountList;
+        this.countryDiscount = countryDiscount;
     }
 
     public Long getId() {
@@ -57,5 +60,13 @@ public class Country {
 
     public void setDiscountList(List<Discount> discountList) {
         this.discountList = discountList;
+    }
+
+    public Double getCountryDiscount() {
+        return countryDiscount;
+    }
+
+    public void setCountryDiscount(Double countryDiscount) {
+        this.countryDiscount = countryDiscount;
     }
 }

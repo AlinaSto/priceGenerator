@@ -27,7 +27,6 @@ public class User {
     private String password;
     @Column
     private String email;
-
     @Column
     private String country;
 
@@ -48,23 +47,20 @@ public class User {
     @JsonManagedReference(value = "user-quotation")
     private List<Quotation> quotationList;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
-    @JsonManagedReference(value = "user-cartItem")
-    private List<CartItem> cartItems;
     public User() {
     }
 
-    public User(Long id, LocalDate dateOfBirth, String username, String password, String email, String country, List<Role> roleList, List<Order> orderList, List<Quotation> quotationList, List<CartItem> cartItems) {
+    public User(Long id,String country, LocalDate dateOfBirth, String username, String password, String email, List<Role> roleList, List<Order> orderList, List<Quotation> quotationList) {
         this.id = id;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.country = country;
         this.roleList = roleList;
         this.orderList = orderList;
         this.quotationList = quotationList;
-        this.cartItems = cartItems;
+        this.country = country;
+
     }
 
     public Long getId() {
@@ -129,14 +125,6 @@ public class User {
         this.orderList = orderList;
     }
 
-    public List<Quotation> getQuotationList() {
-        return quotationList;
-    }
-
-    public void setQuotationList(List<Quotation> quotationList) {
-        this.quotationList = quotationList;
-    }
-
     public String getCountry() {
         return country;
     }
@@ -145,11 +133,13 @@ public class User {
         this.country = country;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public List<Quotation> getQuotationList() {
+        return quotationList;
     }
 
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public void setQuotationList(List<Quotation> quotationList) {
+        this.quotationList = quotationList;
     }
+
+
 }
